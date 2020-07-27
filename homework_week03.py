@@ -1,5 +1,10 @@
 import requests
 from bs4 import BeautifulSoup
+from pymongo import MongoClient
+
+client = MongoClient('localhost',27017)
+db = client.dbsparta
+
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
@@ -12,5 +17,14 @@ trs = soup.select('#body-content > div.newest-list > div > table > tbody > tr')
 for tr in trs:
     rank = tr.select_one('#body-content > div.newest-list > div > table > tbody > tr > td.number').text[0:2].strip()
     title = tr.select_one('#body-content > div.newest-list > div > table > tbody > tr > td.info > a.title.ellipsis').text.strip()
-    artist = tr.select_one('#body-content > div.newest-list > div > table > tbody > tr > td.info > a.artist.ellipsis').text
-    print(rank.strip(), title.strip(), artist.strip())
+    artist = tr.select_one('#body-content > div.newest-list > div > table > tbody > tr > td.info > a.artist.ellipsis').text.strip()
+
+    doc = {
+        'rank':rank,
+        'title':title,
+        'artist':artist
+    }
+    db.music_list.insert_one(doc)
+    #print(rank.strip(), title.strip(), artist.strip())
+
+
