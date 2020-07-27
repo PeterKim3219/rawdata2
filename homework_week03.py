@@ -14,17 +14,19 @@ soup = BeautifulSoup(data.text, 'html.parser')
 
 trs = soup.select('#body-content > div.newest-list > div > table > tbody > tr')
 # 아래 빈 칸('')을 채워보세요
-for tr in trs:
-    rank = tr.select_one('#body-content > div.newest-list > div > table > tbody > tr > td.number').text[0:2].strip()
-    title = tr.select_one('#body-content > div.newest-list > div > table > tbody > tr > td.info > a.title.ellipsis').text.strip()
-    artist = tr.select_one('#body-content > div.newest-list > div > table > tbody > tr > td.info > a.artist.ellipsis').text.strip()
+try :
+    for tr in trs:
+        rank = tr.select_one('#body-content > div.newest-list > div > table > tbody > tr > td.number').text[0:2].strip()
+        title = tr.select_one('#body-content > div.newest-list > div > table > tbody > tr > td.info > a.title.ellipsis').text.strip()
+        artist = tr.select_one('#body-content > div.newest-list > div > table > tbody > tr > td.info > a.artist.ellipsis').text.strip()
 
-    doc = {
-        'rank':rank,
-        'title':title,
-        'artist':artist
-    }
-    db.music_list.insert_one(doc)
-    #print(rank.strip(), title.strip(), artist.strip())
-
+        doc = {
+            'rank':rank,
+            'title':title,
+            'artist':artist
+        }
+        db.music_list.insert_one(doc)
+        print(rank.strip(), title.strip(), artist.strip())
+except Exception as e:
+    print(e)
 
